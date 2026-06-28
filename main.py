@@ -16,10 +16,12 @@ import sys
 import tempfile
 import urllib.request
 
-UPSTREAM_URL = (
-    "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u"
-)
+UPSTREAM_URLS = [
+    "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u",
+    "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn_cctv.m3u",
+]
 MIN_HEIGHT = 1080
+CCTV_MIN_HEIGHT = 720
 OUTPUT = "cn_hd.m3u"
 BACKUP = OUTPUT + ".bak"
 GUARD_MIN_ABSOLUTE = 20
@@ -32,6 +34,44 @@ CCTV_RE = re.compile(r'tvg-id="CCTV|,CCTV-')
 WS_RE = re.compile(r'卫视|Satellite')
 CN_RE = re.compile(r'[\u4e00-\u9fff]')
 GROUP_RE = re.compile(r'group-title="([^"]*)"')
+
+CCTV_CN_NAMES = {
+    "CCTV-1": "CCTV-1 综合",
+    "CCTV-2": "CCTV-2 财经",
+    "CCTV-3": "CCTV-3 综艺",
+    "CCTV-4": "CCTV-4 中文国际",
+    "CCTV-4 Asia": "CCTV-4 亚洲",
+    "CCTV-4 America": "CCTV-4 美洲",
+    "CCTV-4 Europe": "CCTV-4 欧洲",
+    "CCTV-5": "CCTV-5 体育",
+    "CCTV-5+": "CCTV-5+ 体育赛事",
+    "CCTV-6": "CCTV-6 电影",
+    "CCTV-7": "CCTV-7 军事",
+    "CCTV-8": "CCTV-8 电视剧",
+    "CCTV-9": "CCTV-9 纪录",
+    "CCTV-10": "CCTV-10 科教",
+    "CCTV-11": "CCTV-11 戏曲",
+    "CCTV-12": "CCTV-12 社会与法",
+    "CCTV-13": "CCTV-13 新闻",
+    "CCTV-14": "CCTV-14 少儿",
+    "CCTV-15": "CCTV-15 音乐",
+    "CCTV-16": "CCTV-16 奥林匹克",
+    "CCTV-17": "CCTV-17 农业农村",
+    "CCTV-4K": "CCTV-4K 超高清",
+    "CCTV-8K": "CCTV-8K 超高清",
+    "CCTV-Billiards": "央视台球",
+    "CCTV-Culture of Quality": "央视文化精品",
+    "CCTV-Golf & Tennis": "央视高尔夫·网球",
+    "CCTV-Health": "央视卫生健康",
+    "CCTV-Nostalgia Theater": "央视怀旧剧场",
+    "CCTV-Storm Football": "央视风云足球",
+    "CCTV-Storm Music": "央视风云音乐",
+    "CCTV-Storm Theater": "央视风云剧场",
+    "CCTV-The First Theater": "央视第一剧场",
+    "CCTV-Weapon & Technology": "央视兵器科技",
+    "CCTV-Women's Fashion": "央视女性时尚",
+    "CCTV-World Geography": "央视世界地理",
+}
 
 
 def is_priority(info: str) -> bool:
@@ -118,17 +158,23 @@ def atomic_write(content: str, path: str):
         raise
 
 
-def fetch_upstream() -> str | None:
-    try:
-        req = urllib.request.Request(UPSTREAM_URL)
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            if resp.status != 200:
-                print(f"[fetch_upstream] HTTP {resp.status}, abort")
-                return None
-            return resp.read().decode("utf-8")
-    except Exception as e:
-        print(f"[fetch_upstream] Error: {e}")
+def fetch_all() -> str | None:
+    parts = []
+    for url in UPSTREAM_URLS:
+        try:
+            req = urllib.request.Request(url)
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                if resp.status != 200:
+                    print(f"[fetch] HTTP {resp.status} for {url}")
+                    continue
+                body = resp.read().decode("utf-8")
+                parts.append(body)
+                print(f"[fetch] Downloaded {url} ({len(body)} bytes)")
+        except Exception as e:
+            print(f"[fetch] Error fetching {url}: {e}")
+    if not parts:
         return None
+    return "\n".join(parts)
 
 
 def parse_m3u(content: str):
@@ -213,14 +259,13 @@ def main():
         shutil.copy2(OUTPUT, BACKUP)
         print(f"[backup] {OUTPUT} → {BACKUP}")
 
-    print("[filter] Fetching upstream...")
-    content = fetch_upstream()
+    content = fetch_all()
     if content is None:
-        print("[filter] Upstream fetch failed, keeping existing output")
+        print("[filter] All upstream fetches failed, keeping existing output")
         sys.exit(1)
 
     entries = parse_m3u(content)
-    print(f"[filter] Raw entries: {len(entries)}")
+    print(f"[filter] Merged entries: {len(entries)}")
 
     candidates = text_filter(entries)
     candidates = dedup_by_channel(candidates)
@@ -232,7 +277,12 @@ def main():
     groups_count = {"CCTV": 0, "卫视台": 0, "地方台": 0, "其他": 0}
     for info, url, res in candidates:
         name = info.split(",")[-1].strip() if "," in info else ""
+        name_norm = re.sub(r'\bCCTV(\d)', r'CCTV-\1', name)
+        name = CCTV_CN_NAMES.get(name, CCTV_CN_NAMES.get(name_norm, name))
         group = classify_channel(info)
+        if group == "CCTV" and res < CCTV_MIN_HEIGHT:
+            print(f"  [SKIP] [{group}] {name} [{res}p] — below {CCTV_MIN_HEIGHT}p")
+            continue
         extinf = build_extinf(info, group, res)
         healthy.append((group, -res, name, extinf, url))
         groups_count[group] += 1
