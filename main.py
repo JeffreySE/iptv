@@ -101,7 +101,7 @@ def cctv_sort_key(name: str):
         return (0, 0)
     if '4K' in name.upper():
         return (0, 1)
-    return (1, num)
+    return (1, num, 2 if '+' in name else 1)
 
 
 def format_name(info: str, res: int, name_override: str | None = None) -> str:
@@ -295,10 +295,17 @@ def main():
         print(f"  [OK] [{group}] {name} [{res}p]")
 
     healthy.sort(key=lambda x: (
-        x[0],                              # group
-        x[1],                              # -res (higher first)
-        cctv_sort_key(x[2]) if x[0] == "CCTV" else (0, x[2])  # CCTV numeric sort
+        x[0],
+        0 if x[0] == "CCTV" else x[1],
+        cctv_sort_key(x[2]) if x[0] == "CCTV" else (0, x[2])
     ))
+
+    chnum = 1
+    for i, (group, neg_res, name, extinf, url) in enumerate(healthy):
+        if group == "CCTV":
+            extinf = re.sub(r'(#EXTINF:-1)', rf'\1 channel-number="{chnum}"', extinf, count=1)
+            healthy[i] = (group, neg_res, name, extinf, url)
+            chnum += 1
 
     lines = ["#EXTM3U\n"]
     for _, _, _, extinf, url in healthy:
