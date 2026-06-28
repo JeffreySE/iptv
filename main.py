@@ -52,7 +52,6 @@ def classify_channel(info: str) -> str:
 
 
 def cctv_sort_key(name: str):
-    """Sort CCTV: 8K > 4K > numbered 1..17."""
     m = re.search(r'CCTV[- ]?(\d+)', name)
     if not m:
         return (9, 0)
@@ -149,13 +148,12 @@ def text_filter(entries):
     kept = []
     dropped = {"bad_tag": 0, "low_res": 0, "no_res": 0, "priority_kept": 0}
     for info, url in entries:
-        prio = is_priority(info)
-        if prio:
-            kept.append((info, url))
-            dropped["priority_kept"] += 1
-            continue
         if TAG_BAD_RE.search(info):
             dropped["bad_tag"] += 1
+            continue
+        if is_priority(info):
+            kept.append((info, url))
+            dropped["priority_kept"] += 1
             continue
         m = RES_RE.search(info)
         if not m:
@@ -195,9 +193,12 @@ def dedup_by_channel(entries):
         is_prio = items[0][3]
 
         if max_res >= MIN_HEIGHT:
-            filtered = [x for x in items if x[0] >= MIN_HEIGHT]
+            hd = [x for x in items if x[0] >= MIN_HEIGHT]
+            clean = [x for x in hd if 'Not 24/7' not in x[1]]
+            if clean:
+                hd = clean
             limit = 3 if is_prio else 2
-            for res, info, url, _ in filtered[:limit]:
+            for res, info, url, _ in hd[:limit]:
                 result.append((info, url, res))
         else:
             res, info, url, _ = items[0]
