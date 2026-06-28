@@ -1,0 +1,34 @@
+name: IPTV Health Check
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+
+      - name: Install Python deps
+        run: pip install aiohttp
+
+      - name: Run health check
+        run: python health_check.py
+
+      - name: Commit & push results
+        run: |
+          if [ -f cn_hd.m3u ] && [ -s cn_hd.m3u ]; then
+            git config user.name "iptv-bot"
+            git config user.email "iptv-bot@localhost"
+            git add cn_hd.m3u
+            git commit -m "update cn_hd.m3u $(date -u +%Y-%m-%dT%H:%M:%SZ)" || true
+            git push
+          else
+            echo "cn_hd.m3u is empty or missing, skipping commit"
+            exit 1
+          fi
