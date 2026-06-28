@@ -4,7 +4,7 @@
 Phase 1 — Text filter: strip non-1080p/4K/8K & non-24/7 sources
           CCTV / 卫视 always pass regardless of resolution tag
 Phase 2 — ffprobe probe: verify resolution + codec on survivors
-Output → cn_healthy.m3u  (with safety guards against bad overwrites)
+Output → cn_hd.m3u  (with safety guards against bad overwrites)
 """
 
 import asyncio
@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import sys
 import tempfile
+import aiohttp
 
 UPSTREAM_URL = (
     "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u"
@@ -127,8 +128,11 @@ def atomic_write(content: str, path: str):
         raise
 
 
-async def fetch_upstream(session) -> str:
+async def fetch_upstream(session) -> str | None:
     async with session.get(UPSTREAM_URL, timeout=aiohttp.ClientTimeout(total=30)) as resp:
+        if resp.status != 200:
+            print(f"[fetch_upstream] HTTP {resp.status}, abort")
+            return None
         return await resp.text()
 
 
@@ -237,8 +241,6 @@ async def probe_stream(session, url: str, prio: bool):
 
 
 async def main():
-    import aiohttp
-
     if os.path.isfile(OUTPUT):
         shutil.copy2(OUTPUT, BACKUP)
         print(f"[backup] {OUTPUT} → {BACKUP}")
@@ -247,6 +249,9 @@ async def main():
     connector = aiohttp.TCPConnector(limit=CONCURRENCY)
     async with aiohttp.ClientSession(connector=connector) as session:
         content = await fetch_upstream(session)
+        if content is None:
+            print("[health_check] Upstream fetch failed, keeping existing output")
+            sys.exit(1)
         entries = parse_m3u(content)
         print(f"[health_check] Raw entries: {len(entries)}")
 
