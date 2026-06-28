@@ -12,7 +12,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Run filter
-        run: python scripts/health_check.py
+        run: python health_check.py
 
       - name: Commit & push results
         run: |
