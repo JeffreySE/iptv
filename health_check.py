@@ -1,28 +1,25 @@
 #!/usr/bin/env python3
-"""IPTV health check & high-quality filter.
+"""IPTV quality filter.
 
-Phase 1 — Text filter: strip non-1080p/4K/8K & non-24/7 sources
-          CCTV / 卫视 always pass regardless of resolution tag
-Phase 2 — ffprobe probe: verify resolution + codec on survivors
-Output → cn_hd.m3u  (with safety guards against bad overwrites)
+Filters upstream cn.m3u:
+- CCTV / 卫视 always pass text filter regardless of resolution
+- Others: skip [Not 24/7]/[Geo-blocked], require >= 1080p tag
+- If a channel has 1080p+ sources, drop all <1080p sources
+- If a channel has only <1080p sources, keep only the highest res one
+- Output → cn_hd.m3u (with safety guards)
 """
 
-import asyncio
-import json
 import os
 import re
 import shutil
-import subprocess
 import sys
 import tempfile
-import aiohttp
+import urllib.request
 
 UPSTREAM_URL = (
     "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn.m3u"
 )
 MIN_HEIGHT = 1080
-TIMEOUT = 15
-CONCURRENCY = 15
 OUTPUT = "cn_hd.m3u"
 BACKUP = OUTPUT + ".bak"
 GUARD_MIN_ABSOLUTE = 20
@@ -30,29 +27,21 @@ GUARD_MIN_RATIO = 0.5
 
 RES_RE = re.compile(r"\((\d+)p\)")
 TAG_BAD_RE = re.compile(r"\[Not 24/7\]|\[Geo-blocked\]")
-# Priority channels: CCTV series + 卫视 (satellite TV)
 PRIORITY_RE = re.compile(r'tvg-id="CCTV|tvg-name="CCTV|,CCTV-|卫视|Satellite')
-
-# Classification patterns
 CCTV_RE = re.compile(r'tvg-id="CCTV|,CCTV-')
 WS_RE = re.compile(r'卫视|Satellite')
-CN_RE = re.compile(r'[\u4e00-\u9fff]')  # Chinese characters
-
-# group-title injection
+CN_RE = re.compile(r'[\u4e00-\u9fff]')
 GROUP_RE = re.compile(r'group-title="([^"]*)"')
 
 
 def is_priority(info: str) -> bool:
-    """CCTV / 卫视 channels are always kept regardless of resolution."""
     return bool(PRIORITY_RE.search(info))
 
 
 def classify_channel(info: str) -> str:
-    """Assign group-title based on channel type only."""
     is_cctv = bool(CCTV_RE.search(info))
     is_weishi = bool(WS_RE.search(info))
     is_chinese = bool(CN_RE.search(info))
-
     if is_cctv:
         return "CCTV"
     if is_weishi:
@@ -62,34 +51,36 @@ def classify_channel(info: str) -> str:
     return "其他"
 
 
-def format_name(info: str, height: int) -> str:
-    """Rebuild name part of EXTINF with [resolution] tag.
+def cctv_sort_key(name: str):
+    """Sort CCTV: 8K > 4K > numbered 1..17."""
+    m = re.search(r'CCTV[- ]?(\d+)', name)
+    if not m:
+        return (9, 0)
+    num = int(m.group(1))
+    if '8K' in name.upper():
+        return (0, 0)
+    if '4K' in name.upper():
+        return (0, 1)
+    return (1, num)
 
-    Input:  ...,CCTV-1 (1080p)
-    Output: ...,CCTV-1 [1080p]
-    """
+
+def format_name(info: str, res: int) -> str:
     idx = info.rfind(",")
     if idx == -1:
         return info
     prefix = info[:idx]
     name = info[idx + 1:]
-
-    # Remove existing (Np) or [Np] from name, then append clean tag
     name_clean = re.sub(r"\s*[\[\(]\d+p[\]\)]", "", name).strip()
-    new_name = f"{name_clean} [{height}p]"
-    return f"{prefix},{new_name}"
+    return f"{prefix},{name_clean} [{res}p]"
 
 
-def build_extinf(info: str, group: str, height: int) -> str:
-    """Build final EXTINF line with group-title and formatted name."""
-    # Inject or replace group-title
+def build_extinf(info: str, group: str, res: int) -> str:
     if GROUP_RE.search(info):
         tagged = GROUP_RE.sub(f'group-title="{group}"', info)
     else:
         idx = info.rfind(",")
         tagged = info[:idx] + f' group-title="{group}"' + info[idx:] if idx != -1 else info
-    # Format name with resolution
-    return format_name(tagged, height)
+    return format_name(tagged, res)
 
 
 def count_entries(path: str) -> int:
@@ -128,12 +119,17 @@ def atomic_write(content: str, path: str):
         raise
 
 
-async def fetch_upstream(session) -> str | None:
-    async with session.get(UPSTREAM_URL, timeout=aiohttp.ClientTimeout(total=30)) as resp:
-        if resp.status != 200:
-            print(f"[fetch_upstream] HTTP {resp.status}, abort")
-            return None
-        return await resp.text()
+def fetch_upstream() -> str | None:
+    try:
+        req = urllib.request.Request(UPSTREAM_URL)
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            if resp.status != 200:
+                print(f"[fetch_upstream] HTTP {resp.status}, abort")
+                return None
+            return resp.read().decode("utf-8")
+    except Exception as e:
+        print(f"[fetch_upstream] Error: {e}")
+        return None
 
 
 def parse_m3u(content: str):
@@ -150,11 +146,6 @@ def parse_m3u(content: str):
 
 
 def text_filter(entries):
-    """Phase 1 — text-only filter.
-
-    Priority channels (CCTV/卫视): always pass (no tag or res filtering).
-    Others:         skip [Not 24/7]/[Geo-blocked], require >= 1080p tag.
-    """
     kept = []
     dropped = {"bad_tag": 0, "low_res": 0, "no_res": 0, "priority_kept": 0}
     for info, url in entries:
@@ -185,8 +176,11 @@ def text_filter(entries):
     return kept
 
 
-def dedup_by_channel(entries, max_per_channel=2, max_per_priority=3):
-    """Deduplicate; priority channels get more slots."""
+def dedup_by_channel(entries):
+    """Deduplicate per channel:
+    - If channel has any 1080p+ source → keep only 1080p+ entries
+    - If all sources < 1080p → keep only the single highest res entry
+    """
     groups = {}
     for info, url in entries:
         name = info.split(",")[-1].strip() if "," in info else info
@@ -197,101 +191,66 @@ def dedup_by_channel(entries, max_per_channel=2, max_per_priority=3):
     result = []
     for name, items in groups.items():
         items.sort(key=lambda x: -x[0])  # highest res first
-        limit = max_per_priority if items[0][3] else max_per_channel
-        for res, info, url, _ in items[:limit]:
-            result.append((info, url))
-    print(f"[dedup] {len(entries)} → {len(result)} "
-          f"(max {max_per_channel}/channel, {max_per_priority}/priority)")
+        max_res = items[0][0]
+        is_prio = items[0][3]
+
+        if max_res >= MIN_HEIGHT:
+            filtered = [x for x in items if x[0] >= MIN_HEIGHT]
+            limit = 3 if is_prio else 2
+            for res, info, url, _ in filtered[:limit]:
+                result.append((info, url, res))
+        else:
+            res, info, url, _ = items[0]
+            result.append((info, url, res))
+
+    print(f"[dedup] {len(entries)} → {len(result)}")
     return result
 
 
-async def probe_stream(session, url: str, prio: bool):
-    """Phase 2 — ffprobe probe.
-
-    Priority channels: pass if alive at any resolution.
-    Others:           require >= MIN_HEIGHT.
-    """
-    try:
-        async with session.get(url, timeout=aiohttp.ClientTimeout(total=TIMEOUT)) as resp:
-            if resp.status != 200:
-                return {"alive": False, "height": 0, "codec": ""}
-        result = subprocess.run(
-            ["ffprobe", "-v", "quiet", "-print_format", "json",
-             "-show_streams", "-rw_timeout", str(TIMEOUT * 1000000), url],
-            capture_output=True, text=True, timeout=TIMEOUT,
-        )
-        if result.returncode != 0:
-            return {"alive": False, "height": 0, "codec": ""}
-        data = json.loads(result.stdout)
-        height = 0
-        codec = ""
-        for s in data.get("streams", []):
-            if s.get("codec_type") == "video":
-                h = s.get("height", 0)
-                if h > height:
-                    height = h
-                    codec = s.get("codec_name", "")
-        if prio:
-            alive = height > 0  # any resolution is OK
-        else:
-            alive = height >= MIN_HEIGHT
-        return {"alive": alive, "height": height, "codec": codec}
-    except Exception:
-        return {"alive": False, "height": 0, "codec": ""}
-
-
-async def main():
+def main():
     if os.path.isfile(OUTPUT):
         shutil.copy2(OUTPUT, BACKUP)
         print(f"[backup] {OUTPUT} → {BACKUP}")
 
-    print("[health_check] Fetching upstream...")
-    connector = aiohttp.TCPConnector(limit=CONCURRENCY)
-    async with aiohttp.ClientSession(connector=connector) as session:
-        content = await fetch_upstream(session)
-        if content is None:
-            print("[health_check] Upstream fetch failed, keeping existing output")
-            sys.exit(1)
-        entries = parse_m3u(content)
-        print(f"[health_check] Raw entries: {len(entries)}")
+    print("[filter] Fetching upstream...")
+    content = fetch_upstream()
+    if content is None:
+        print("[filter] Upstream fetch failed, keeping existing output")
+        sys.exit(1)
 
-        candidates = text_filter(entries)
-        candidates = dedup_by_channel(candidates, max_per_channel=2, max_per_priority=3)
-        if not candidates:
-            print("[health_check] No candidates after text filter, keeping existing output")
-            sys.exit(1)
+    entries = parse_m3u(content)
+    print(f"[filter] Raw entries: {len(entries)}")
 
-        print(f"[health_check] Probing {len(candidates)} streams...")
-        tasks = [probe_stream(session, url, is_priority(info)) for info, url in candidates]
-        results = await asyncio.gather(*tasks)
+    candidates = text_filter(entries)
+    candidates = dedup_by_channel(candidates)
+    if not candidates:
+        print("[filter] No candidates after filter, keeping existing output")
+        sys.exit(1)
 
-    # Collect healthy entries with sort info
     healthy = []
-    groups = {"CCTV": 0, "卫视台": 0, "地方台": 0, "其他": 0}
-    for (info, url), probe in zip(candidates, results):
+    groups_count = {"CCTV": 0, "卫视台": 0, "地方台": 0, "其他": 0}
+    for info, url, res in candidates:
         name = info.split(",")[-1].strip() if "," in info else ""
-        prio = is_priority(info)
-        if probe["alive"]:
-            group = classify_channel(info)
-            extinf = build_extinf(info, group, probe["height"])
-            healthy.append((group, -probe["height"], name, extinf, url))
-            groups[group] += 1
-            tag = "[P]" if prio else ""
-            print(f"  [OK]{tag} [{group}] {name} | {probe['height']}p {probe['codec']}")
-        else:
-            reason = "unreachable" if not probe["height"] else f"{probe['height']}p"
-            print(f"  [--] {name} | {reason}")
+        group = classify_channel(info)
+        extinf = build_extinf(info, group, res)
+        healthy.append((group, -res, name, extinf, url))
+        groups_count[group] += 1
+        print(f"  [OK] [{group}] {name} [{res}p]")
 
-    healthy.sort()  # by group, then -height (higher res first)
+    healthy.sort(key=lambda x: (
+        x[0],                              # group
+        x[1],                              # -res (higher first)
+        cctv_sort_key(x[2]) if x[0] == "CCTV" else (0, x[2])  # CCTV numeric sort
+    ))
 
     lines = ["#EXTM3U\n"]
     for _, _, _, extinf, url in healthy:
         lines.append(f"{extinf}\n{url}\n")
     healthy_count = len(healthy)
 
-    print(f"\n[health_check] Healthy: {healthy_count}/{len(candidates)}")
+    print(f"\n[filter] Output: {healthy_count} streams")
     for g in ["CCTV", "卫视台", "地方台", "其他"]:
-        print(f"  {g}: {groups[g]}")
+        print(f"  {g}: {groups_count[g]}")
 
     if not guard_check(healthy_count):
         if os.path.isfile(BACKUP):
@@ -300,8 +259,8 @@ async def main():
         sys.exit(1)
 
     atomic_write("".join(lines), OUTPUT)
-    print("[health_check] Done")
+    print("[filter] Done")
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    main()
