@@ -21,7 +21,7 @@ UPSTREAM_URLS = [
     "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn_cctv.m3u",
 ]
 MIN_HEIGHT = 1080
-CCTV_720_ALLOWED = re.compile(r'CCTV[- ]?(?:[23]|4(?!K)|5\+?)')
+CCTV_MIN_HEIGHT = 720
 NAME_RES_RE = re.compile(r"\s*[\[\(]\d+p[\]\)]")
 OUTPUT = "cn_hd.m3u"
 BACKUP = OUTPUT + ".bak"
@@ -286,8 +286,8 @@ def main():
         name_clean = re.sub(r'\bCCTV(\d)', r'CCTV-\1', name_clean)
         name = CCTV_CN_NAMES.get(name_clean, name_clean)
         group = classify_channel(info)
-        if group == "CCTV" and res < MIN_HEIGHT and not CCTV_720_ALLOWED.search(name):
-            print(f"  [SKIP] [{group}] {name} [{res}p] — require {MIN_HEIGHT}p")
+        if group == "CCTV" and res < CCTV_MIN_HEIGHT:
+            print(f"  [SKIP] [{group}] {name} [{res}p] — below {CCTV_MIN_HEIGHT}p")
             continue
         extinf = build_extinf(info, group, res, name if name != name_clean else None)
         healthy.append((group, -res, name, extinf, url))
