@@ -21,7 +21,8 @@ UPSTREAM_URLS = [
     "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/cn_cctv.m3u",
 ]
 MIN_HEIGHT = 1080
-CCTV_MIN_HEIGHT = 720
+CCTV_720_ALLOWED = re.compile(r'CCTV[- ]?(?:[23]|4(?!K)|5\+?)')
+NAME_RES_RE = re.compile(r"\s*[\[\(]\d+p[\]\)]")
 OUTPUT = "cn_hd.m3u"
 BACKUP = OUTPUT + ".bak"
 GUARD_MIN_ABSOLUTE = 20
@@ -103,23 +104,25 @@ def cctv_sort_key(name: str):
     return (1, num)
 
 
-def format_name(info: str, res: int) -> str:
+def format_name(info: str, res: int, name_override: str | None = None) -> str:
     idx = info.rfind(",")
     if idx == -1:
         return info
     prefix = info[:idx]
+    if name_override:
+        return f"{prefix},{name_override} [{res}p]"
     name = info[idx + 1:]
     name_clean = re.sub(r"\s*[\[\(]\d+p[\]\)]", "", name).strip()
     return f"{prefix},{name_clean} [{res}p]"
 
 
-def build_extinf(info: str, group: str, res: int) -> str:
+def build_extinf(info: str, group: str, res: int, name_override: str | None = None) -> str:
     if GROUP_RE.search(info):
         tagged = GROUP_RE.sub(f'group-title="{group}"', info)
     else:
         idx = info.rfind(",")
         tagged = info[:idx] + f' group-title="{group}"' + info[idx:] if idx != -1 else info
-    return format_name(tagged, res)
+    return format_name(tagged, res, name_override)
 
 
 def count_entries(path: str) -> int:
@@ -227,7 +230,9 @@ def dedup_by_channel(entries):
     """
     groups = {}
     for info, url in entries:
-        name = info.split(",")[-1].strip() if "," in info else info
+        raw = info.split(",")[-1].strip() if "," in info else info
+        name = NAME_RES_RE.sub("", raw).strip()
+        name = re.sub(r'\bCCTV(\d)', r'CCTV-\1', name)
         m = RES_RE.search(info)
         res = int(m.group(1)) if m else 0
         groups.setdefault(name, []).append((res, info, url, is_priority(info)))
@@ -276,14 +281,15 @@ def main():
     healthy = []
     groups_count = {"CCTV": 0, "卫视台": 0, "地方台": 0, "其他": 0}
     for info, url, res in candidates:
-        name = info.split(",")[-1].strip() if "," in info else ""
-        name_norm = re.sub(r'\bCCTV(\d)', r'CCTV-\1', name)
-        name = CCTV_CN_NAMES.get(name, CCTV_CN_NAMES.get(name_norm, name))
+        raw = info.split(",")[-1].strip() if "," in info else ""
+        name_clean = NAME_RES_RE.sub("", raw).strip()
+        name_clean = re.sub(r'\bCCTV(\d)', r'CCTV-\1', name_clean)
+        name = CCTV_CN_NAMES.get(name_clean, name_clean)
         group = classify_channel(info)
-        if group == "CCTV" and res < CCTV_MIN_HEIGHT:
-            print(f"  [SKIP] [{group}] {name} [{res}p] — below {CCTV_MIN_HEIGHT}p")
+        if group == "CCTV" and res < MIN_HEIGHT and not CCTV_720_ALLOWED.search(name):
+            print(f"  [SKIP] [{group}] {name} [{res}p] — require {MIN_HEIGHT}p")
             continue
-        extinf = build_extinf(info, group, res)
+        extinf = build_extinf(info, group, res, name if name != name_clean else None)
         healthy.append((group, -res, name, extinf, url))
         groups_count[group] += 1
         print(f"  [OK] [{group}] {name} [{res}p]")
