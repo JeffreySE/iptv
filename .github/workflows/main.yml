@@ -1,4 +1,4 @@
-name: IPTV Health Check
+name: Check
 
 on:
   schedule:
