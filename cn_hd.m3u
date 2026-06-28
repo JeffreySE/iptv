@@ -9,6 +9,8 @@ http://198.204.240.250:82/live/cctv4k.m3u8
 http://69.30.245.50/live/cctv1.m3u8
 #EXTINF:-1 tvg-id="CCTV1.cn@HD" group-title="CCTV",CCTV-1 [1080p]
 http://198.204.240.250:82/live/cctv1.m3u8
+#EXTINF:-1 tvg-id="CCTV4America.cn@SD" group-title="CCTV",CCTV-4 America [1080p]
+https://global.cgtn.cicc.media.caton.cloud/master/cgtn-america.m3u8
 #EXTINF:-1 tvg-id="CCTV6.cn@HD" group-title="CCTV",CCTV-6 [1080p]
 http://69.30.245.50/live/cctv6.m3u8
 #EXTINF:-1 tvg-id="CCTV6.cn@HD" group-title="CCTV",CCTV-6 [1080p]
@@ -25,6 +27,30 @@ https://xykt-fix.github.io/play/a02e/index.m3u8
 http://74.91.26.218:82/live/cctv16hd.m3u8
 #EXTINF:-1 tvg-id="CCTV17.cn@HD" group-title="CCTV",CCTV-17 [1080p]
 http://74.91.26.218:82/live/cctv17hd.m3u8
+#EXTINF:-1 tvg-id="CCTVBilliards.cn@HD" group-title="CCTV",CCTV-Billiards [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/ystq.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVCultureofQuality.cn@SD" group-title="CCTV",CCTV-Culture of Quality [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/ysjp.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVGolfTennis.cn@HD" group-title="CCTV",CCTV-Golf & Tennis [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/gefwq.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVHealth.cn@HD" group-title="CCTV",CCTV-Health [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/wsjk.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVNostalgiaTheater.cn@HD" group-title="CCTV",CCTV-Nostalgia Theater [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/hjjc.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVStormFootball.cn@HD" group-title="CCTV",CCTV-Storm Football [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/fyzq.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVStormMusic.cn@HD" group-title="CCTV",CCTV-Storm Music [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/fyyy.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVStormTheater.cn@HD" group-title="CCTV",CCTV-Storm Theater [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/fyjc.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVTheFirstTheater.cn@HD" group-title="CCTV",CCTV-The First Theater [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/dyjc.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVWeaponTechnology.cn@HD" group-title="CCTV",CCTV-Weapon & Technology [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/gfjs.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVWomensFashion.cn@SD" group-title="CCTV",CCTV-Women's Fashion [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/nxss.m3u8?auth=testpub
+#EXTINF:-1 tvg-id="CCTVWorldGeography.cn@SD" group-title="CCTV",CCTV-World Geography [1080p]
+http://38.75.136.137:98/gslb/dsdqpub/sjdl.m3u8?auth=testpub
 #EXTINF:-1 tvg-id="CCTV1.cn@SD" group-title="CCTV",CCTV-1 [720p]
 http://74.91.26.218:82/live/cctv1hd.m3u8
 #EXTINF:-1 tvg-id="CCTV2.cn@SD" group-title="CCTV",CCTV-2 [720p]
@@ -47,16 +73,6 @@ http://74.91.26.218:82/live/cctv12hd.m3u8
 http://74.91.26.218:82/live/cctv13hd.m3u8
 #EXTINF:-1 tvg-id="CCTV15.cn@SD" group-title="CCTV",CCTV-15 [720p]
 http://74.91.26.218:82/live/cctv15hd.m3u8
-#EXTINF:-1 tvg-id="CCTVWomensFashion.cn@SD" group-title="CCTV",女性时尚 [576p]
-http://223.110.245.169/PLTV/4/224/3221227026/index.m3u8
-#EXTINF:-1 tvg-id="CCTV1.cn@SD" group-title="CCTV",CCTV-1 [0p]
-https://liveplay-srs.voc.com.cn/hls/tv/134_180adf.m3u8
-#EXTINF:-1 tvg-id="CCTV9.cn@SD" group-title="CCTV",CCTV-9 (576i) [0p]
-https://xykt-fix.github.io/Y77.m3u8
-#EXTINF:-1 tvg-id="CCTV10.cn@SD" group-title="CCTV",CCTV-10 (576i) [0p]
-https://cdn4.skygo.mn/live/disk1/CCTV-10/HLSv3-FTA/CCTV-10.m3u8
-#EXTINF:-1 tvg-id="CCTV11.cn@SD" group-title="CCTV",CCTV-11 [0p]
-https://xykt-fix.github.io/play/a02b/index.m3u8
 #EXTINF:-1 tvg-id="HebeiTV.cn@SD" group-title="其他",Hebei TV [2160p]
 https://event.pull.hebtv.com/live/live101.m3u8
 #EXTINF:-1 tvg-id="HunanTV.cn@SD" group-title="其他",Hunan TV [2160p]
