@@ -33,39 +33,37 @@ http://74.91.26.218:82/live/cctv11hd.m3u8
 http://74.91.26.218:82/live/cctv12hd.m3u8
 #EXTINF:-1 channel-number="17" tvg-id="CCTV13.cn@HD" group-title="CCTV",CCTV-13 新闻 [1080p]
 http://go.bkpcp.top/mg/cctv13
-#EXTINF:-1 channel-number="18" tvg-id="CCTV13.cn@SD" group-title="CCTV",CCTV-13 新闻 [1080p]
-https://cdn3.163189.xyz/163189/cctv13
-#EXTINF:-1 channel-number="19" tvg-id="CCTV14.cn@HD" group-title="CCTV",CCTV-14 少儿 [1080p]
+#EXTINF:-1 channel-number="18" tvg-id="CCTV14.cn@HD" group-title="CCTV",CCTV-14 少儿 [1080p]
 http://74.91.26.218:82/live/cctv14hd.m3u8
-#EXTINF:-1 channel-number="20" tvg-id="CCTV15.cn@SD" group-title="CCTV",CCTV-15 音乐 [1080p]
+#EXTINF:-1 channel-number="19" tvg-id="CCTV15.cn@SD" group-title="CCTV",CCTV-15 音乐 [1080p]
 https://xykt-fix.github.io/play/a02e/index.m3u8
-#EXTINF:-1 channel-number="21" tvg-id="CCTV16.cn@HD" group-title="CCTV",CCTV-16 奥林匹克 [1080p]
+#EXTINF:-1 channel-number="20" tvg-id="CCTV16.cn@HD" group-title="CCTV",CCTV-16 奥林匹克 [1080p]
 http://74.91.26.218:82/live/cctv16hd.m3u8
-#EXTINF:-1 channel-number="22" tvg-id="CCTV17.cn@HD" group-title="CCTV",CCTV-17 农业农村 [1080p]
+#EXTINF:-1 channel-number="21" tvg-id="CCTV17.cn@HD" group-title="CCTV",CCTV-17 农业农村 [1080p]
 http://74.91.26.218:82/live/cctv17hd.m3u8
-#EXTINF:-1 channel-number="23" tvg-id="CCTVBilliards.cn@HD" group-title="CCTV",央视台球 [1080p]
+#EXTINF:-1 channel-number="22" tvg-id="CCTVBilliards.cn@HD" group-title="CCTV",央视台球 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/ystq.m3u8?auth=testpub
-#EXTINF:-1 channel-number="24" tvg-id="CCTVCultureofQuality.cn@SD" group-title="CCTV",央视文化精品 [1080p]
+#EXTINF:-1 channel-number="23" tvg-id="CCTVCultureofQuality.cn@SD" group-title="CCTV",央视文化精品 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/ysjp.m3u8?auth=testpub
-#EXTINF:-1 channel-number="25" tvg-id="CCTVGolfTennis.cn@HD" group-title="CCTV",央视高尔夫·网球 [1080p]
+#EXTINF:-1 channel-number="24" tvg-id="CCTVGolfTennis.cn@HD" group-title="CCTV",央视高尔夫·网球 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/gefwq.m3u8?auth=testpub
-#EXTINF:-1 channel-number="26" tvg-id="CCTVHealth.cn@HD" group-title="CCTV",央视卫生健康 [1080p]
+#EXTINF:-1 channel-number="25" tvg-id="CCTVHealth.cn@HD" group-title="CCTV",央视卫生健康 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/wsjk.m3u8?auth=testpub
-#EXTINF:-1 channel-number="27" tvg-id="CCTVNostalgiaTheater.cn@HD" group-title="CCTV",央视怀旧剧场 [1080p]
+#EXTINF:-1 channel-number="26" tvg-id="CCTVNostalgiaTheater.cn@HD" group-title="CCTV",央视怀旧剧场 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/hjjc.m3u8?auth=testpub
-#EXTINF:-1 channel-number="28" tvg-id="CCTVStormFootball.cn@HD" group-title="CCTV",央视风云足球 [1080p]
+#EXTINF:-1 channel-number="27" tvg-id="CCTVStormFootball.cn@HD" group-title="CCTV",央视风云足球 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/fyzq.m3u8?auth=testpub
-#EXTINF:-1 channel-number="29" tvg-id="CCTVStormMusic.cn@HD" group-title="CCTV",央视风云音乐 [1080p]
+#EXTINF:-1 channel-number="28" tvg-id="CCTVStormMusic.cn@HD" group-title="CCTV",央视风云音乐 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/fyyy.m3u8?auth=testpub
-#EXTINF:-1 channel-number="30" tvg-id="CCTVStormTheater.cn@HD" group-title="CCTV",央视风云剧场 [1080p]
+#EXTINF:-1 channel-number="29" tvg-id="CCTVStormTheater.cn@HD" group-title="CCTV",央视风云剧场 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/fyjc.m3u8?auth=testpub
-#EXTINF:-1 channel-number="31" tvg-id="CCTVTheFirstTheater.cn@HD" group-title="CCTV",央视第一剧场 [1080p]
+#EXTINF:-1 channel-number="30" tvg-id="CCTVTheFirstTheater.cn@HD" group-title="CCTV",央视第一剧场 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/dyjc.m3u8?auth=testpub
-#EXTINF:-1 channel-number="32" tvg-id="CCTVWeaponTechnology.cn@HD" group-title="CCTV",央视兵器科技 [1080p]
+#EXTINF:-1 channel-number="31" tvg-id="CCTVWeaponTechnology.cn@HD" group-title="CCTV",央视兵器科技 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/gfjs.m3u8?auth=testpub
-#EXTINF:-1 channel-number="33" tvg-id="CCTVWomensFashion.cn@SD" group-title="CCTV",央视女性时尚 [1080p]
+#EXTINF:-1 channel-number="32" tvg-id="CCTVWomensFashion.cn@SD" group-title="CCTV",央视女性时尚 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/nxss.m3u8?auth=testpub
-#EXTINF:-1 channel-number="34" tvg-id="CCTVWorldGeography.cn@SD" group-title="CCTV",央视世界地理 [1080p]
+#EXTINF:-1 channel-number="33" tvg-id="CCTVWorldGeography.cn@SD" group-title="CCTV",央视世界地理 [1080p]
 http://38.75.136.137:98/gslb/dsdqpub/sjdl.m3u8?auth=testpub
 #EXTINF:-1 tvg-id="HebeiTV.cn@SD" group-title="其他",Hebei TV [2160p]
 https://event.pull.hebtv.com/live/live101.m3u8
@@ -153,8 +151,6 @@ http://39.134.115.163:8080/PLTV/88888910/224/3221225735/index.m3u8
 http://39.135.138.59:18890/PLTV/88888910/224/3221225696/index.m3u8
 #EXTINF:-1 tvg-id="ChongqingTVInternational.cn@SD" group-title="卫视台",重庆卫视 [1080p]
 http://118.81.195.79:9003/hls/22/index.m3u8
-#EXTINF:-1 tvg-id="QinghaiTV.cn@SD" group-title="卫视台",青海卫视 [1080p]
-http://live.geermurmt.com/qhws/sd/live.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",黑龙卫视 [1080p]
 http://223.110.243.169/PLTV/3/224/3221227252/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",黑龙卫视 [1080p]
@@ -187,8 +183,8 @@ http://39.134.115.163:8080/PLTV/88888910/224/3221225723/index.m3u8
 http://39.134.115.163:8080/PLTV/88888910/224/3221225728/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",陕西卫视 [576p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225729/index.m3u8
-#EXTINF:-1 tvg-id="ZhejiangSatelliteTV.cn@SD" group-title="卫视台",Zhejiang Satellite TV [0p]
-https://play-qukan.cztv.com/live/1758879019692345.m3u8
+#EXTINF:-1 tvg-id="QinghaiTV.cn@SD" group-title="卫视台",青海卫视 [576p]
+http://39.134.115.163:8080/PLTV/88888910/224/3221225727/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="地方台",纯享4K [2160p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225786/index.m3u8
 #EXTINF:-1 tvg-id="VoATVChina.cn@SD" group-title="地方台",VOA美国之音 [1080p]
@@ -229,10 +225,6 @@ http://223.110.245.165/ott.js.chinamobile.com/PLTV/3/224/3221225945/index.m3u8
 http://223.110.245.167/ott.js.chinamobile.com/PLTV/3/224/3221225947/index.m3u8
 #EXTINF:-1 tvg-id="DunhuangTV.cn@SD" group-title="地方台",敦煌电视台 [1080p]
 http://117.156.28.119/270000001111/1110000028/index.m3u8
-#EXTINF:-1 tvg-id="" group-title="地方台",晋中综合 [1080p]
-http://jzlive.jztvnews.com:90/live/jzzh.m3u8
-#EXTINF:-1 tvg-id="" group-title="地方台",洪雅新闻综合 [1080p]
-http://117.172.215.250:8083/videos/live/35/39/GQVbrgob5CGJM/GQVbrgob5CGJM.m3u8
 #EXTINF:-1 tvg-id="ChuzhouNewsChannel.cn@SD" group-title="地方台",滁州市广播电视台 新闻综合频道 [1080p]
 http://live.cztv.cc:85/live/xwpd.m3u8
 #EXTINF:-1 tvg-id="" group-title="地方台",滨海新闻 [1080p]
