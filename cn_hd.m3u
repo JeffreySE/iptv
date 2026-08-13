@@ -79,6 +79,12 @@ https://english-livebkali.cgtn.com/live/encgtn.m3u8
 https://amg00405-rakutentv-cgtndocumentary-rakuten-0ql8j.amagi.tv/master.m3u8
 #EXTINF:-1 tvg-id="CGTNFrench.cn@SD" group-title="其他",CGTN French [1080p]
 http://145.239.5.177/214/index.m3u8
+#EXTINF:-1 tvg-id="CGTNGlobalBiz.cn@SD" group-title="其他",CGTN Global Biz [1080p]
+https://fastlive.cctvplus.com/out/v1/2b3d8a0c805d437f9dc85b764c2ac599/index.m3u8
+#EXTINF:-1 tvg-id="ChinaTravel.cn@SD" group-title="其他",China Travel [1080p]
+https://fastlive.cctvplus.com/out/v1/ca6f9297b7314a63959435028af287fc/index.m3u8
+#EXTINF:-1 tvg-id="DiscoveringChina.cn@SD" group-title="其他",Discovering China [1080p]
+https://fastlive.cctvplus.com/out/v1/8442c3bfd4c64a3984389328f6087879/index.m3u8
 #EXTINF:-1 tvg-id="TonghuaTV.cn@SD" group-title="其他",Tonghua TV [1080p]
 http://lsfb.avap.jilintv.cn/zqvk7vpj/channel/43ea5771aa44421591f9dfd2b71f1b9b/index.m3u8
 #EXTINF:-1 tvg-id="TonghuaTV.cn@SD" group-title="其他",Tonghua TV [1080p]
@@ -175,8 +181,6 @@ http://223.110.245.139/PLTV/4/224/3221227002/index.m3u8
 http://39.134.115.163:8080/PLTV/88888910/224/3221225725/index.m3u8
 #EXTINF:-1 tvg-id="HainanSatelliteTV.cn@SD" group-title="卫视台",海南卫视 [576p]
 http://118.81.195.79:9003/hls/28/index.m3u8
-#EXTINF:-1 tvg-id="GansuTV.cn@SD" group-title="卫视台",甘肃卫视 [576p]
-http://118.81.195.79:9003/hls/25/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",西藏卫视 [576p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225723/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",贵州卫视 [576p]
