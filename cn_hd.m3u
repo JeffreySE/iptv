@@ -91,22 +91,6 @@ http://lsfb.avap.jilintv.cn/zqvk7vpj/channel/43ea5771aa44421591f9dfd2b71f1b9b/in
 https://lsfb.avap.jilintv.cn/zqvk7vpj/channel/43ea5771aa44421591f9dfd2b71f1b9b/index.m3u8
 #EXTINF:-1 tvg-id="ShenzhenSatelliteTV.cn@SD" group-title="卫视台",Shenzhen Satellite TV [2160p]
 https://livepull-tcms.sztv.com.cn/live/sz4Kpgm.m3u8
-#EXTINF:-1 tvg-id="" group-title="卫视台",东南卫视 (Southeast Television fka Fujian Television) [2160p]
-http://118.81.195.79:9003/hls/24/index.m3u8
-#EXTINF:-1 tvg-id="DragonTV.cn@SD" group-title="卫视台",东方卫视 [2160p]
-http://118.81.195.79:9003/hls/23/index.m3u8
-#EXTINF:-1 tvg-id="JilinSatelliteTV.cn@SD" group-title="卫视台",吉林卫视 [2160p]
-http://118.81.195.79:9003/hls/34/index.m3u8
-#EXTINF:-1 tvg-id="ShanxiTV.cn@SD" group-title="卫视台",山西卫视 [2160p]
-http://118.81.195.79:9003/hls/19/index.m3u8
-#EXTINF:-1 tvg-id="GuangdongSatelliteTV.cn@SD" group-title="卫视台",广东卫视 [2160p]
-http://118.81.195.79:9003/hls/26/index.m3u8
-#EXTINF:-1 tvg-id="HebeiTV.cn@SD" group-title="卫视台",河北卫视 [2160p]
-http://118.81.195.79:9003/hls/29/index.m3u8
-#EXTINF:-1 tvg-id="HenanTVSatellite.cn@SD" group-title="卫视台",河南卫视 [2160p]
-http://118.81.195.79:9003/hls/30/index.m3u8
-#EXTINF:-1 tvg-id="HeilongjiangTV.cn@SD" group-title="卫视台",黑龙江卫视 [2160p]
-http://118.81.195.79:9003/hls/31/index.m3u8
 #EXTINF:-1 tvg-id="BeijingSatelliteTV.cn@HD" group-title="卫视台",BRTV 北京卫视 [1080p]
 http://go.bkpcp.top/mg/bjws
 #EXTINF:-1 tvg-id="YunnanSatelliteTV.cn@SD" group-title="卫视台",云南卫视 [1080p]
@@ -147,16 +131,12 @@ http://39.134.24.166/dbiptv.sn.chinamobile.com/PLTV/88888890/224/3221226205/inde
 http://39.134.39.39/PLTV/88888888/224/3221226199/index.m3u8
 #EXTINF:-1 tvg-id="ShenzhenSatelliteTV.cn@SD" group-title="卫视台",深圳卫视 [1080p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225700/index.m3u8
-#EXTINF:-1 tvg-id="HubeiSatelliteTV.cn@SD" group-title="卫视台",湖北卫视 [1080p]
-http://118.81.195.79:9003/hls/32/index.m3u8
 #EXTINF:-1 tvg-id="LiaoningTV.cn@SD" group-title="卫视台",辽宁卫视 [1080p]
 http://39.134.39.37/PLTV/88888888/224/3221226209/index.m3u8
 #EXTINF:-1 tvg-id="LiaoningTV.cn@SD" group-title="卫视台",辽宁卫视 [1080p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225735/index.m3u8
 #EXTINF:-1 tvg-id="LiaoningTV.cn@SD" group-title="卫视台",辽宁卫视 [1080p]
 http://39.135.138.59:18890/PLTV/88888910/224/3221225696/index.m3u8
-#EXTINF:-1 tvg-id="ChongqingTVInternational.cn@SD" group-title="卫视台",重庆卫视 [1080p]
-http://118.81.195.79:9003/hls/22/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",黑龙卫视 [1080p]
 http://223.110.243.169/PLTV/3/224/3221227252/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",黑龙卫视 [1080p]
@@ -171,16 +151,12 @@ http://223.110.245.159/ott.js.chinamobile.com/PLTV/3/224/3221226996/index.m3u8
 http://39.134.115.163:8080/PLTV/88888910/224/3221225733/index.m3u8
 #EXTINF:-1 tvg-id="NingxiaSatelliteChannel.cn@SD" group-title="卫视台",宁夏卫视 [576p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225726/index.m3u8
-#EXTINF:-1 tvg-id="GuangxiTV.cn@SD" group-title="卫视台",广西卫视 [576p]
-http://118.81.195.79:9003/hls/27/index.m3u8
 #EXTINF:-1 tvg-id="YanbianSatelliteTV.cn@SD" group-title="卫视台",康巴卫视 [576p]
 http://223.110.245.139/PLTV/4/224/3221227008/index.m3u8
 #EXTINF:-1 tvg-id="YanbianSatelliteTV.cn@SD" group-title="卫视台",延边卫视 [576p]
 http://223.110.245.139/PLTV/4/224/3221227002/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",新疆卫视 [576p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225725/index.m3u8
-#EXTINF:-1 tvg-id="HainanSatelliteTV.cn@SD" group-title="卫视台",海南卫视 [576p]
-http://118.81.195.79:9003/hls/28/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",西藏卫视 [576p]
 http://39.134.115.163:8080/PLTV/88888910/224/3221225723/index.m3u8
 #EXTINF:-1 tvg-id="" group-title="卫视台",贵州卫视 [576p]
