@@ -35,8 +35,8 @@ http://74.91.26.218:82/live/cctv12hd.m3u8
 http://go.bkpcp.top/mg/cctv13
 #EXTINF:-1 channel-number="18" tvg-id="CCTV14.cn@HD" group-title="CCTV",CCTV-14 少儿 [1080p]
 http://74.91.26.218:82/live/cctv14hd.m3u8
-#EXTINF:-1 channel-number="19" tvg-id="CCTV15.cn@SD" group-title="CCTV",CCTV-15 音乐 [1080p]
-https://xykt-fix.github.io/play/a02e/index.m3u8
+#EXTINF:-1 channel-number="19" tvg-id="CCTV15.cn@SD" group-title="CCTV",CCTV-15 音乐 [720p]
+http://74.91.26.218:82/live/cctv15hd.m3u8
 #EXTINF:-1 channel-number="20" tvg-id="CCTV16.cn@HD" group-title="CCTV",CCTV-16 奥林匹克 [1080p]
 http://74.91.26.218:82/live/cctv16hd.m3u8
 #EXTINF:-1 channel-number="21" tvg-id="CCTV17.cn@HD" group-title="CCTV",CCTV-17 农业农村 [1080p]
